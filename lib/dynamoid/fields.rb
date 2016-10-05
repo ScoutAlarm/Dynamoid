@@ -18,8 +18,9 @@ module Dynamoid #:nodoc:
       class_attribute :range_key
 
       self.attributes = {}
-      field :created_at, :datetime
-      field :updated_at, :datetime
+      # DS - do not want these
+      # field :created_at, :datetime
+      # field :updated_at, :datetime
 
       field :id #Default primary key
     end
@@ -141,19 +142,20 @@ module Dynamoid #:nodoc:
 
     private
 
-    # Automatically called during the created callback to set the created_at time.
+    # DS - do not have a use for these
+    # # Automatically called during the created callback to set the created_at time.
+    # #
+    # # @since 0.2.0
+    # def set_created_at
+    #   self.created_at = DateTime.now if Dynamoid::Config.timestamps
+    # end
     #
-    # @since 0.2.0
-    def set_created_at
-      self.created_at = DateTime.now if Dynamoid::Config.timestamps
-    end
-
-    # Automatically called during the save callback to set the updated_at time.
-    #
-    # @since 0.2.0
-    def set_updated_at
-      self.updated_at = DateTime.now if Dynamoid::Config.timestamps
-    end
+    # # Automatically called during the save callback to set the updated_at time.
+    # #
+    # # @since 0.2.0
+    # def set_updated_at
+    #   self.updated_at = DateTime.now if Dynamoid::Config.timestamps
+    # end
 
     def set_type
       self.type ||= self.class.to_s if self.class.attributes[:type]
