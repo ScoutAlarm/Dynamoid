@@ -12,10 +12,10 @@ module Dynamoid
 
       define_model_callbacks :create, :save, :destroy, :initialize, :update
 
-      # DS - do not want these being called.
-      # before_create :set_created_at
-      # before_save :set_updated_at
-      after_initialize :set_type
+      # DS - changed these methods to reflect new names
+      before_create :set_created
+      before_save :set_updated
+      # after_initialize :set_type
     end
 
     include ActiveModel::AttributeMethods

@@ -94,7 +94,9 @@ module Dynamoid #:nodoc:
       #
       # @since 0.2.0
       def build(attrs = {})
-        attrs[:type] ? attrs[:type].constantize.new(attrs) : new(attrs)
+        # DS - removing this behavior
+        # attrs[:type] ? attrs[:type].constantize.new(attrs) : new(attrs)
+        new(attrs)
       end
 
       # Does this object exist?
