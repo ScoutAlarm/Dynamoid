@@ -36,11 +36,15 @@ module Dynamoid
       #
       # @return [Aws::DynamoDB::Client] the DynamoDB connection
       def connect!
-        @client = if Dynamoid::Config.endpoint?
-          Aws::DynamoDB::Client.new(endpoint: Dynamoid::Config.endpoint)
-        else
-          Aws::DynamoDB::Client.new
+        config = {
+          http_open_timeout: 5,
+          http_read_timeout: 5,
+          retry_limit: 10
+        }
+        if Dynamoid::Config.endpoint?
+          config[:endpoint] = Dynamoid::Config.endpoint
         end
+        @client = Aws::DynamoDB::Client.new(config)
         @table_cache = {}
       end
 
