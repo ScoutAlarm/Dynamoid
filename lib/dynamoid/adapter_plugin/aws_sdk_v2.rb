@@ -36,11 +36,7 @@ module Dynamoid
       #
       # @return [Aws::DynamoDB::Client] the DynamoDB connection
       def connect!
-        config = {
-          http_open_timeout: 5,
-          http_read_timeout: 5,
-          retry_limit: 10
-        }
+        config = Dynamoid::Config.dynamodb_client_config
         if Dynamoid::Config.endpoint?
           config[:endpoint] = Dynamoid::Config.endpoint
         end
