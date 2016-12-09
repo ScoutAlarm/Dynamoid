@@ -203,6 +203,8 @@ module Dynamoid
         conditions[:unless_exists] << range_key if(range_key)
 
         run_callbacks(:create) { persist(conditions) }
+      elsif overwrite
+        run_callbacks(:create) { persist }
       else
         persist
       end
