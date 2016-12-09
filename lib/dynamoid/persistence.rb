@@ -196,7 +196,9 @@ module Dynamoid
     def save(options = {})
       self.class.create_table
 
-      if new_record?
+      overwrite = options[:overwrite] || false
+
+      if new_record? && !overwrite
         conditions = { :unless_exists => [self.class.hash_key]}
         conditions[:unless_exists] << range_key if(range_key)
 
