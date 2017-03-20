@@ -155,7 +155,7 @@ module Dynamoid
           :hash_value => hash_key_value,
           :index_name => index.name,
         }
-        if range_key_field
+        if range_key_field && range_key_value
           opts[:range_key] = range_key_field
           opts[range_op_mapped] = range_key_value
         end
