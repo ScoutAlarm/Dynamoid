@@ -30,6 +30,8 @@ module Dynamoid #:nodoc:
       #
       # @since 0.2.0
       def where(args)
+        index_name = args.delete(:index)
+        scan_index(index_name) if index_name
         args.each {|k, v| query[k.to_sym] = v}
         self
       end
