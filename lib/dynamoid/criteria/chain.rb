@@ -88,6 +88,13 @@ module Dynamoid #:nodoc:
         self
       end
 
+      def scan_index(index_sym)
+        index = source.find_index(index_sym)
+        raise Dynamoid::Errors::MissingIndex.new("attempted to find #{index_sym}") if index.nil?
+        @index_name = index.name
+        self
+      end
+
       # Allows you to use the results of a search as an enumerable over the results found.
       #
       # @since 0.2.0
@@ -205,6 +212,7 @@ module Dynamoid #:nodoc:
         opts[:limit] = @eval_limit if @eval_limit
         opts[:next_token] = start_key if @start
         opts[:batch_size] = @batch_size if @batch_size
+        opts[:index_name] = @index_name if @index_name
         opts
       end
     end

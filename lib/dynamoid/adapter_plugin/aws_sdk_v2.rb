@@ -474,8 +474,10 @@ module Dynamoid
       def scan(table_name, scan_hash, select_opts = {})
         limit = select_opts.delete(:limit)
         batch = select_opts.delete(:batch_size)
+        index_name = select_opts.delete(:index_name)
 
         request = { table_name: table_name }
+        request[:index_name] = index_name if index_name
         request[:limit] = batch || limit if batch || limit
         request[:scan_filter] = scan_hash.reduce({}) do |memo, kvp|
           memo[kvp[0].to_s] = {
