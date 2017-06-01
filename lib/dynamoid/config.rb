@@ -28,6 +28,7 @@ module Dynamoid
     option :sync_retry_wait_seconds, :default => 2
     option :convert_big_decimal, :default => false
     option :dynamodb_client_config, :default => {}
+    option :info_on_benchmark_exceeded, :default => nil # in second threshold
 
     # The default logger for Dynamoid: either the Rails logger or just stdout.
     #

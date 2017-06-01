@@ -51,7 +51,13 @@ module Dynamoid
     def benchmark(method, *args)
       start = Time.now
       result = yield
-      Dynamoid.logger.info "(#{((Time.now - start) * 1000.0).round(2)} ms) #{method.to_s.split('_').collect(&:upcase).join(' ')}#{ " - #{args.inspect}" unless args.nil? || args.empty? }"
+      duration = ((Time.now - start) * 1000.0).round(2)
+      msg = "(#{duration} ms) #{method.to_s.split('_').collect(&:upcase).join(' ')}#{ " - #{args.inspect}" unless args.nil? || args.empty? }"
+      if Dynamoid::Config.info_on_benchmark_exceeded && Dynamoid::Config.info_on_benchmark_exceeded <= duration
+        Dynamoid.logger.info msg
+      else
+        Dynamoid.logger.debug msg
+      end
       return result
     end
 
