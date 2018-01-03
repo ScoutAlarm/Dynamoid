@@ -142,28 +142,13 @@ module Dynamoid
       #
       # @todo: Provide support for passing options to underlying delete_item http://docs.aws.amazon.com/sdkforruby/api/Aws/DynamoDB/Client.html#delete_item-instance_method
       def batch_delete_item(options)
-        requests = []
-
         options.each_pair do |table_name, ids|
           table = describe_table(table_name)
-
-          delete_requests = ids.map do |id|
-            { delete_request: { key: key_stanza(table, *id) }}
+          ids.each do |id|
+            client.delete_item(table_name: table_name, key: key_stanza(table, *id))
           end
-
-          requests << { table_name => delete_requests }
         end
-
-        begin
-          requests.map do |request_items|
-            client.batch_write_item(
-              request_items: request_items,
-              return_consumed_capacity: 'TOTAL',
-              return_item_collection_metrics: 'SIZE')
-          end
-        rescue Aws::DynamoDB::Errors::ConditionalCheckFailedException => e
-          raise Dynamoid::Errors::ConditionalCheckFailedException, e
-        end
+        nil
       end
 
       # Create a table on DynamoDB. This usually takes a long time to complete.
