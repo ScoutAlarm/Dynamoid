@@ -423,9 +423,9 @@ module Dynamoid
                   :index_name
                 )
 
+        limit = opts.delete(:limit)
         opts.delete(:consistent_read)
         opts.delete(:scan_index_forward)
-        opts.delete(:limit)
         opts.delete(:select)
         opts.delete(:index_name)
 
@@ -462,9 +462,13 @@ module Dynamoid
         q[:key_conditions] = key_conditions
 
         Enumerator.new { |y|
+          record_count = 0
           loop do
             results = client.query(q)
             results.items.each { |row| y << result_item_to_hash(row) }
+
+            record_count += results.items.size
+            break if limit && record_count >= limit
 
             if(lk = results.last_evaluated_key)
               q[:exclusive_start_key] = lk
@@ -505,10 +509,13 @@ module Dynamoid
 
         Enumerator.new do |y|
           # Batch loop, pulls multiple requests until done using the start_key
+          record_count = 0
           loop do
             results = client.scan(request)
-
             results.data[:items].each { |row| y << result_item_to_hash(row) }
+
+            record_count += results.items.size
+            break if limit && record_count >= limit
 
             if((lk = results[:last_evaluated_key]) && batch)
               request[:exclusive_start_key] = lk
